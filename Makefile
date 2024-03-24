@@ -3,7 +3,7 @@ publish: dist/scrape2md.ts
 
 dist/scrape2md.ts:
 	curl -X 'GET' \
-  'https://api.val.town/v1/vals/4444c3fa-cd73-11ee-bfb1-8aad37b30b4b' \
+  'https://api.val.town/v1/vals/1ff86f92-e9f7-11ee-9325-8aad37b30b4b' \
   -H 'accept: application/json' | jq .code -r > $@
 
 clean:

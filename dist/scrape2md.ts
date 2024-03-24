@@ -1,7 +1,7 @@
 import { isProbablyReaderable, Readability } from "npm:@mozilla/readability@^0.5.0";
 import { DOMParser } from "npm:linkedom@0.16.10";
 import { marked } from "npm:marked@12.0.1";
-import TurndownService from "npm:turndown@^7.1.2";
+import TurndownService from "npm:turndown@^7.1.3";
 import { getSubtitles } from "npm:youtube-captions-scraper@^2.0.1";
 
 function getYoutubeVideoID(url: URL): string | null {
@@ -47,7 +47,6 @@ export default async function(req: Request): Promise<Response> {
   const url = new URL(pathname);
 
   const youtubeVideoID = getYoutubeVideoID(url);
-  console.log(myurl, url, youtubeVideoID);
   if (youtubeVideoID) {
     const arr = (await getSubtitles({
       videoID: youtubeVideoID,
