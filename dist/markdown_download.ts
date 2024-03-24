@@ -95,7 +95,7 @@ const html = `
 <!DOCTYPE html>
 <html>
 <head>
-    <title>scrape2md ui</title>
+    <title>markdown.download</title>
     <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
@@ -104,17 +104,16 @@ const html = `
         <div class="max-w-md w-full bg-white rounded-lg shadow-md p-6">
             <form class="space-y-4">
                 <div>
-                    <label for="url" class="block text-sm font-medium text-gray-700">Url to scrape:</label>
+                    <label for="url" class="block text-sm font-medium text-gray-700">Url to convert:</label>
                     <input type="text" id="url" name="url" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
                 <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Submit
                 </button>
             </form>
-            <a href="https://www.val.town/v/taras/scrape2md" class="block mt-4 text-indigo-600 hover:text-indigo-700">scrape2md</a>
+            <a href="https://www.val.town/v/taras/markdown_download" class="block mt-4 text-indigo-600 hover:text-indigo-700">markdown.download</a>
         </div>
     </div>
-    <!-- Optionally, you can include Tailwind's plugins for more functionality -->
 </body>
 </html>
 `;
