@@ -1,0 +1,22 @@
+{
+  "name": "markdown-download-cf",
+  "version": "0.0.0",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240320.1",
+    "esbuild": "^0.20.2",
+    "typescript": "^5.4.3",
+    "vitest": "^1.4.0",
+    "wrangler": "3.37.0"
+  },
+  "private": true,
+  "scripts": {
+    "start": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@tarasglek/markdown-download": "npm:@jsr/tarasglek__markdown-download@^1.0.1",
+    "node-html-markdown": "^1.3.0",
+    "turndown": "^7.1.3"
+  }
+}
