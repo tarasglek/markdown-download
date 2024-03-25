@@ -1,7 +1,8 @@
 import { isProbablyReaderable, Readability } from "npm:@mozilla/readability@^0.5.0";
 import { DOMParser } from "npm:linkedom@0.16.10";
 import { marked } from "npm:marked@12.0.1";
-import TurndownService from "npm:turndown@^7.1.3";
+// import TurndownService from "npm:turndown@^7.1.3";
+import { AgentMarkdown } from "npm:agentmarkdown@6.0.0";
 import { getSubtitles } from "npm:youtube-captions-scraper@^2.0.1";
 
 function getYoutubeVideoID(url: URL): string | null {
@@ -82,7 +83,7 @@ export default async function(req: Request): Promise<Response> {
   const reader = new Readability(doc);
   const article = reader.parse();
 
-  const markdown = new TurndownService().turndown(article?.content || "") + "\n\n" + url;
+  const markdown = await AgentMarkdown.produce(article?.content || "") + "\n\n" + url;
 
   if (req.headers.get("Accept")?.includes("text/html")) {
     return response(await marked.parse(markdown), "text/html");
