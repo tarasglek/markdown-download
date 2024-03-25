@@ -14,6 +14,6 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@tarasglek/markdown-download": "npm:@jsr/tarasglek__markdown-download@^1.0.6"
+    "@tarasglek/markdown-download": "npm:@jsr/tarasglek__markdown-download@^1.0.11"
   }
 }
