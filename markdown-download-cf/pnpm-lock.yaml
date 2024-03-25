@@ -6,22 +6,13 @@ settings:
 
 dependencies:
   '@tarasglek/markdown-download':
-    specifier: npm:@jsr/tarasglek__markdown-download@^1.0.1
-    version: /@jsr/tarasglek__markdown-download@1.0.1
-  node-html-markdown:
-    specifier: ^1.3.0
-    version: 1.3.0
-  turndown:
-    specifier: ^7.1.3
-    version: 7.1.3
+    specifier: npm:@jsr/tarasglek__markdown-download@^1.0.6
+    version: /@jsr/tarasglek__markdown-download@1.0.6
 
 devDependencies:
   '@cloudflare/workers-types':
     specifier: ^4.20240320.1
     version: 4.20240320.1
-  esbuild:
-    specifier: ^0.20.2
-    version: 0.20.2
   typescript:
     specifier: ^5.4.3
     version: 5.4.3
@@ -547,13 +538,13 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@jsr/tarasglek__markdown-download@1.0.1:
-    resolution: {integrity: sha512-DA92s0BYOgmtwFTEiexY0CKFi5PfYFqT2izAnRXmmMIRH6VEQjcCl49YD0UOQAXsAJxm2PtvqPtAlNFXGB7hTg==, tarball: https://npm.jsr.io/~/7/@jsr/tarasglek__markdown-download/1.0.1.tgz}
+  /@jsr/tarasglek__markdown-download@1.0.6:
+    resolution: {integrity: sha512-cXkMSy5zSYVTBjfasUTwCl8z/5VPOuRuB+I7du2puLG0XV40R7xQ3SGTc3M/FAeo1YTFTBV6K3UC3meuNkhpfQ==, tarball: https://npm.jsr.io/~/7/@jsr/tarasglek__markdown-download/1.0.6.tgz}
     dependencies:
       '@mozilla/readability': 0.5.0
+      agentmarkdown: 6.0.0
       linkedom: 0.16.10
       marked: 12.0.1
-      turndown: 7.1.3
       youtube-captions-scraper: 2.0.3
     transitivePeerDependencies:
       - debug
@@ -737,6 +728,16 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
+
+  /agentmarkdown@6.0.0:
+    resolution: {integrity: sha512-oJNPsrr/+CsWVHoGw+0c5A7hp/l+baw/Z1eQXjwRhdgQE56LqVSyZabPBWoHS7foRc0S4jmM6QSRMQEJ5ihd7g==}
+    engines: {node: '>=16'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      domhandler: 5.0.3
+      htmlparser2: 9.1.0
+    dev: false
 
   /ansi-styles@5.2.0:
     resolution: {integrity: sha512-Cxwpt2SfTzTtXcfOlzGEee8O+c+MmUgGrNiBcXnuWxuFJHe6a5Hz7qwhwe5OgaSYI0IJvkLqWX1ASG+cJOkEiA==}
@@ -933,10 +934,6 @@ packages:
     engines: {node: '>= 4'}
     dependencies:
       domelementtype: 2.3.0
-    dev: false
-
-  /domino@2.1.6:
-    resolution: {integrity: sha512-3VdM/SXBZX2omc9JF9nOPCtDaYQ67BGp5CoLpIQlO2KCAPETs8TcDHacF26jXadGbvUteZzRTeos2fhID5+ucQ==}
     dev: false
 
   /domutils@3.1.0:
@@ -1316,20 +1313,6 @@ packages:
     engines: {node: '>= 6.13.0'}
     dev: true
 
-  /node-html-markdown@1.3.0:
-    resolution: {integrity: sha512-OeFi3QwC/cPjvVKZ114tzzu+YoR+v9UXW5RwSXGUqGb0qCl0DvP406tzdL7SFn8pZrMyzXoisfG2zcuF9+zw4g==}
-    engines: {node: '>=10.0.0'}
-    dependencies:
-      node-html-parser: 6.1.12
-    dev: false
-
-  /node-html-parser@6.1.12:
-    resolution: {integrity: sha512-/bT/Ncmv+fbMGX96XG9g05vFt43m/+SYKIs9oAemQVYyVcZmDAI2Xq/SbNcpOA35eF0Zk2av3Ksf+Xk8Vt8abA==}
-    dependencies:
-      css-select: 5.1.0
-      he: 1.2.0
-    dev: false
-
   /normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
@@ -1608,12 +1591,6 @@ packages:
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
     dev: true
-
-  /turndown@7.1.3:
-    resolution: {integrity: sha512-Z3/iJ6IWh8VBiACWQJaA5ulPQE5E1QwvBHj00uGzdQxdRnd8fh1DPqNOJqzQDu6DkOstORrtXzf/9adB+vMtEA==}
-    dependencies:
-      domino: 2.1.6
-    dev: false
 
   /type-detect@4.0.8:
     resolution: {integrity: sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==}
