@@ -1,6 +1,6 @@
 # markdown.download 
 
-Handy script/library to convert various data sources into markdown. Intended to make it easier to consume the web in ereaders
+Handy microservice/library to convert various data sources into markdown. Intended to make it easier to consume the web in ereaders
 
 https://jsr.io/@tarasglek/markdown-download
 

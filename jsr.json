@@ -1,5 +1,5 @@
 {
   "name": "@tarasglek/markdown-download",
-  "version": "1.0.20",
+  "version": "1.0.32",
   "exports": "./mod.ts"
 }

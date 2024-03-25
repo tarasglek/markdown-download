@@ -1,9 +1,25 @@
 import { isProbablyReaderable, Readability } from "npm:@mozilla/readability@^0.5.0";
-import { AgentMarkdown } from "npm:agentmarkdown@6.0.0";
 import { DOMParser } from "npm:linkedom@0.16.10";
 import { marked } from "npm:marked@12.0.1";
-import TurndownService from "npm:turndown@^7.1.3";
 import { getSubtitles } from "npm:youtube-captions-scraper@^2.0.1";
+
+const isCloudflareWorker = typeof Request !== "undefined" && typeof Response !== "undefined";
+
+// init async loading of modules
+const AgentMarkdownImport = isCloudflareWorker ? import("npm:agentmarkdown@6.0.0") : null;
+const TurndownService = isCloudflareWorker ? null : await import("npm:turndown@^7.1.3");
+
+async function markdown2html(html: string): Promise<string> {
+  if (AgentMarkdownImport) {
+    // TurndownService doesn't work on cf
+    // Dynamically import AgentMarkdown when running in Cloudflare Worker
+    const { AgentMarkdown } = await AgentMarkdownImport;
+    return await AgentMarkdown.produce(html);
+  } else {
+    // Dynamically import TurndownService otherwise
+    return new (await TurndownService)().turndown(html);
+  }
+}
 
 function getYoutubeVideoID(url: URL): string | null {
   const regExp = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/i;
@@ -32,15 +48,6 @@ function err(msg: string): Response {
     },
   });
   return response(errorMessage, "application/json");
-}
-
-async function markdown2html(html: string) {
-  try {
-    return new TurndownService().turndown(html);
-  } catch (e) {
-    console.log("Turndown failed, falling back to AgentMarkdown", e.stack);
-  }
-  return await AgentMarkdown.produce(html);
 }
 
 function fudgeURL(url: string) {
