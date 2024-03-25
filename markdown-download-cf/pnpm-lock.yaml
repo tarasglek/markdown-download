@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@tarasglek/markdown-download':
-    specifier: npm:@jsr/tarasglek__markdown-download@^1.0.11
-    version: /@jsr/tarasglek__markdown-download@1.0.11
+    specifier: npm:@jsr/tarasglek__markdown-download@^1.0.20
+    version: /@jsr/tarasglek__markdown-download@1.0.20
 
 devDependencies:
   '@cloudflare/workers-types':
@@ -538,13 +538,14 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@jsr/tarasglek__markdown-download@1.0.11:
-    resolution: {integrity: sha512-0WUtEQnzqpK0pDEpAkhIuU6UFfFNPWrZe8m/zUVrDncL35jL9JEK1wym47HboDmOxBdgXEY5q7PphTcjCAROzw==, tarball: https://npm.jsr.io/~/7/@jsr/tarasglek__markdown-download/1.0.11.tgz}
+  /@jsr/tarasglek__markdown-download@1.0.20:
+    resolution: {integrity: sha512-qMHnZgIkbsueiFc+ySi84yEfKJHFDQZqtcM0Ywa0aFMIo/xt+6puog2rPCbg7tZsfHXR4RXJcVI7/hvjHL+zyA==, tarball: https://npm.jsr.io/~/7/@jsr/tarasglek__markdown-download/1.0.20.tgz}
     dependencies:
       '@mozilla/readability': 0.5.0
       agentmarkdown: 6.0.0
       linkedom: 0.16.10
       marked: 12.0.1
+      turndown: 7.1.3
       youtube-captions-scraper: 2.0.3
     transitivePeerDependencies:
       - debug
@@ -934,6 +935,10 @@ packages:
     engines: {node: '>= 4'}
     dependencies:
       domelementtype: 2.3.0
+    dev: false
+
+  /domino@2.1.6:
+    resolution: {integrity: sha512-3VdM/SXBZX2omc9JF9nOPCtDaYQ67BGp5CoLpIQlO2KCAPETs8TcDHacF26jXadGbvUteZzRTeos2fhID5+ucQ==}
     dev: false
 
   /domutils@3.1.0:
@@ -1591,6 +1596,12 @@ packages:
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
     dev: true
+
+  /turndown@7.1.3:
+    resolution: {integrity: sha512-Z3/iJ6IWh8VBiACWQJaA5ulPQE5E1QwvBHj00uGzdQxdRnd8fh1DPqNOJqzQDu6DkOstORrtXzf/9adB+vMtEA==}
+    dependencies:
+      domino: 2.1.6
+    dev: false
 
   /type-detect@4.0.8:
     resolution: {integrity: sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==}
