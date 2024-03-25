@@ -6,6 +6,9 @@ GET_VAL_CMD=curl -X 'GET' \
 publish: $(DOWNLOADS)
 	deno publish
 
+deploy: publish
+	cd markdown-download-cf && pnpm dlx jsr add @tarasglek/markdown-download && pnpm run deploy
+
 markdown_download.ts:
 	$(GET_VAL_CMD) .code  > $@
 

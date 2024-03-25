@@ -86,7 +86,16 @@ export default async function(req: Request): Promise<Response> {
   const markdown = await AgentMarkdown.produce(article?.content || "") + "\n\n" + url;
 
   if (req.headers.get("Accept")?.includes("text/html")) {
-    return response(await marked.parse(markdown), "text/html");
+    const body = await marked.parse(markdown);
+    const html = `
+<html lang="en" class="js-focus-visible" data-js-focus-visible=""><head>
+  <meta charset="utf-8">
+  <title>${doc.title}</title>
+  </head>
+  ${body}
+  </html>
+    `;
+    return response(html, "text/html");
   } else {
     return response(markdown);
   }
