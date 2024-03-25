@@ -1,8 +1,8 @@
 import { isProbablyReaderable, Readability } from "npm:@mozilla/readability@^0.5.0";
+import { AgentMarkdown } from "npm:agentmarkdown@6.0.0";
 import { DOMParser } from "npm:linkedom@0.16.10";
 import { marked } from "npm:marked@12.0.1";
-// import TurndownService from "npm:turndown@^7.1.3";
-import { AgentMarkdown } from "npm:agentmarkdown@6.0.0";
+import TurndownService from "npm:turndown@^7.1.3";
 import { getSubtitles } from "npm:youtube-captions-scraper@^2.0.1";
 
 function getYoutubeVideoID(url: URL): string | null {
@@ -34,6 +34,24 @@ function err(msg: string): Response {
   return response(errorMessage, "application/json");
 }
 
+async function markdown2html(html: string) {
+  try {
+    return new TurndownService().turndown(html);
+  } catch (e) {
+    console.log("Turndown failed, falling back to AgentMarkdown", e.stack);
+  }
+  return await AgentMarkdown.produce(html);
+}
+
+function fudgeURL(url: string) {
+  try {
+    return new URL(url);
+  } catch (e) {
+    // console.log("Url parsing failed", e.stack);
+    return new URL("https://" + url);
+  }
+}
+
 export default async function(req: Request): Promise<Response> {
   const myurl = new URL(req.url);
   let pathname = myurl.pathname.substring(1) + myurl.search;
@@ -41,11 +59,11 @@ export default async function(req: Request): Promise<Response> {
     const urlAsFormParam = myurl.searchParams.get("url");
     if (urlAsFormParam) {
       pathname = urlAsFormParam;
-    } else {
+    } else if (pathname.length < 2) {
       return response(html, "text/html");
     }
   }
-  const url = new URL(pathname);
+  const url = fudgeURL(pathname);
 
   const youtubeVideoID = getYoutubeVideoID(url);
   if (youtubeVideoID) {
@@ -83,7 +101,7 @@ export default async function(req: Request): Promise<Response> {
   const reader = new Readability(doc);
   const article = reader.parse();
 
-  const markdown = await AgentMarkdown.produce(article?.content || "") + "\n\n" + url;
+  const markdown = await markdown2html(article?.content || "") + "\n\n" + url;
 
   if (req.headers.get("Accept")?.includes("text/html")) {
     const body = await marked.parse(markdown);

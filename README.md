@@ -1,16 +1,29 @@
+# markdown.download 
+
+Handy script/library to convert various data sources into markdown. Intended to make it easier to consume the web in ereaders
+
+https://jsr.io/@tarasglek/markdown-download
+
+### Features
+- Apply readability
+- Further convert article into markdown to simplify it
+- Allow webpages to be viewable as markdown via curl
+- Serve markdown converted to html to browsers
+- Extract youtube subtitles
+
+### Source
+
 https://github.com/tarasglek/markdown-download
 
 https://www.val.town/v/taras/markdown_download
 
 License: MIT
 
-Handy script to convert various data sources into markdown. Intended to make it easier to consume the web in ereaders
-
 Usage: 
  https://markdown.download/ + URL
 
 Dev:
- https://taras-markdown_download.web.val.run/ + URL
+ https://val.markdown.download/ + URL
 
 
 ```
