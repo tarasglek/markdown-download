@@ -25,6 +25,21 @@ export async function html2markdown(html: string): Promise<string> {
   }
 }
 
+/**
+ * extracts article from html
+ * then converts it to md
+ * @returns markdown in string
+ */
+export async function readability2markdown(html: string): Promise<{ title: string; markdown: string }> {
+  const doc = await (new DOMParser().parseFromString(html, "text/html"));
+
+  const reader = new Readability(doc);
+  const article = reader.parse();
+
+  const markdown = await html2markdown(article?.content || "");
+  return { title: doc.title.textContent, markdown };
+}
+
 function getYoutubeVideoID(url: URL): string | null {
   const regExp = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/i;
   const match = url.href.match(regExp);
@@ -106,7 +121,7 @@ export default async function(req: Request): Promise<Response> {
     return response(description);
   }
 
-  const dom_promise = fetch(url.toString(), {
+  const html = await fetch(url.toString(), {
     method: req.method,
     headers: new Headers({
       "User-Agent":
@@ -125,28 +140,22 @@ export default async function(req: Request): Promise<Response> {
       // Add any other headers you need here
     }),
   })
-    .then(r => r.text())
-    .then(async html => new DOMParser().parseFromString(html, "text/html"));
-  const doc = await dom_promise;
-
-  const reader = new Readability(doc);
-  const article = reader.parse();
-
-  const markdown = await html2markdown(article?.content || "") + "\n\n" + url;
-
+    .then(r => r.text());
+  const { title, markdown } = await readability2markdown(html);
+  const markdown_extended = markdown + "\n\n" + url;
   if (req.headers.get("Accept")?.includes("text/html")) {
-    const body = await marked.parse(markdown);
+    const body = await marked.parse(markdown_extended);
     const html = `
 <html lang="en" class="js-focus-visible" data-js-focus-visible=""><head>
   <meta charset="utf-8">
-  <title>${doc.title}</title>
+  <title>${title}</title>
   </head>
   ${body}
   </html>
     `;
     return response(html, "text/html");
   } else {
-    return response(markdown);
+    return response(markdown_extended);
   }
 }
 
