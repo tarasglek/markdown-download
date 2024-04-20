@@ -9,7 +9,11 @@ const isCloudflareWorker = typeof Request !== "undefined" && typeof Response !==
 const AgentMarkdownImport = isCloudflareWorker ? import("npm:agentmarkdown@6.0.0") : null;
 const TurndownService = isCloudflareWorker ? null : await import("npm:turndown@^7.1.3");
 
-async function markdown2html(html: string): Promise<string> {
+/**
+ * converts HTML to markdown
+ * @returns markdown in string
+ */
+export async function html2markdown(html: string): Promise<string> {
   if (AgentMarkdownImport) {
     // TurndownService doesn't work on cf
     // Dynamically import AgentMarkdown when running in Cloudflare Worker
@@ -59,7 +63,11 @@ function fudgeURL(url: string) {
   }
 }
 
-export default async function(req: Request): Promise<Response> {
+function processInput(req: Request) {
+  let ret = {
+    url: undefined as undefined | URL,
+    response: undefined as undefined | Response,
+  };
   const myurl = new URL(req.url);
   let pathname = myurl.pathname.substring(1) + myurl.search;
   if (!pathname.startsWith("http")) {
@@ -67,11 +75,27 @@ export default async function(req: Request): Promise<Response> {
     if (urlAsFormParam) {
       pathname = urlAsFormParam;
     } else if (pathname.length < 2) {
-      return response(html, "text/html");
+      ret.response = response(
+        generate_ui(
+          "URL to convert to markdown:",
+          "https://www.val.town/v/taras/markdown_download",
+          "markdown.download",
+        ),
+        "text/html",
+      );
+      return ret;
     }
   }
-  const url = fudgeURL(pathname);
+  ret.url = fudgeURL(pathname);
+  return ret;
+}
 
+export default async function(req: Request): Promise<Response> {
+  const action = processInput(req);
+  const url = action.url;
+  if (!url) {
+    return action.response!;
+  }
   const youtubeVideoID = getYoutubeVideoID(url);
   if (youtubeVideoID) {
     const arr = (await getSubtitles({
@@ -108,7 +132,7 @@ export default async function(req: Request): Promise<Response> {
   const reader = new Readability(doc);
   const article = reader.parse();
 
-  const markdown = await markdown2html(article?.content || "") + "\n\n" + url;
+  const markdown = await html2markdown(article?.content || "") + "\n\n" + url;
 
   if (req.headers.get("Accept")?.includes("text/html")) {
     const body = await marked.parse(markdown);
@@ -126,7 +150,11 @@ export default async function(req: Request): Promise<Response> {
   }
 }
 
-const html = `
+/**
+ * Simple UI that takes a url
+ */
+export function generate_ui(input_description: string, link: string, link_text: string): string {
+  const html = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -139,16 +167,18 @@ const html = `
         <div class="max-w-md w-full bg-white rounded-lg shadow-md p-6">
             <form class="space-y-4">
                 <div>
-                    <label for="url" class="block text-sm font-medium text-gray-700">Url to convert:</label>
+                    <label for="url" class="block text-sm font-medium text-gray-700">${input_description}</label>
                     <input type="text" id="url" name="url" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
                 <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Submit
                 </button>
             </form>
-            <a href="https://www.val.town/v/taras/markdown_download" class="block mt-4 text-indigo-600 hover:text-indigo-700">markdown.download</a>
+            <a href="${link}" class="block mt-4 text-indigo-600 hover:text-indigo-700">${link_text}</a>
         </div>
     </div>
 </body>
 </html>
 `;
+  return html;
+}
