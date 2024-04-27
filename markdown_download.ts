@@ -146,10 +146,15 @@ export default async function(req: Request): Promise<Response> {
     } catch (e) {
       transcript = `Failed to fetch transcript ${e}`;
     }
-    const y = await YouTube.getVideo(url.toString());
-    const header = "# " + y.title + "\n\n" + y.embedHTML() + `\n\n<div style="white-space: pre-wrap;">\n`
-      + y.description + "\n</div>\n\n";
-    markdown = header + transcript;
+    let header = "";
+    try {
+      const y = await YouTube.getVideo(url.toString());
+      header = "# " + y.title + "\n\n" + y.embedHTML() + `\n\n<div style="white-space: pre-wrap;">\n`
+        + y.description + "\n</div>\n\n";
+    } catch (e) {
+      header = `Failed to fetch youtube metadata: ${e}`;
+    }
+    markdown = header + "\n" + transcript;
   } else {
     const r = await readability2markdown(html);
     title = r.title;
