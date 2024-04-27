@@ -2,6 +2,7 @@ import { isProbablyReaderable, Readability } from "npm:@mozilla/readability@^0.5
 import { DOMParser } from "npm:linkedom@0.16.10";
 import { marked } from "npm:marked@12.0.1";
 import { getSubtitles } from "npm:youtube-captions-scraper@^2.0.1";
+import { YouTube } from "npm:youtube-sr@4.3.11";
 
 const isCloudflareWorker = typeof Request !== "undefined" && typeof Response !== "undefined";
 
@@ -111,15 +112,6 @@ export default async function(req: Request): Promise<Response> {
   if (!url) {
     return action.response!;
   }
-  const youtubeVideoID = getYoutubeVideoID(url);
-  if (youtubeVideoID) {
-    const arr = (await getSubtitles({
-      videoID: youtubeVideoID,
-    })) as { text: string }[];
-    const description = "## Generated Transcription\n\n"
-      + arr.map(({ text }) => text).join("\n");
-    return response(description);
-  }
 
   const html = await fetch(url.toString(), {
     method: req.method,
@@ -139,9 +131,30 @@ export default async function(req: Request): Promise<Response> {
       "Upgrade-Insecure-Requests": "1",
       // Add any other headers you need here
     }),
-  })
-    .then(r => r.text());
-  const { title, markdown } = await readability2markdown(html);
+  }).then(r => r.text());
+
+  let title = "";
+  let markdown = "";
+  const youtubeVideoID = getYoutubeVideoID(url);
+  if (youtubeVideoID) {
+    let transcript = "## Generated Transcription\n\n";
+    try {
+      const arr = (await getSubtitles({
+        videoID: youtubeVideoID,
+      })) as { text: string }[];
+      transcript += arr.map(({ text }) => text).join("\n\n");
+    } catch (e) {
+      transcript = `Failed to fetch transcript ${e}`;
+    }
+    const y = await YouTube.getVideo(url.toString());
+    const header = "# " + y.title + "\n\n" + y.embedHTML() + `\n\n<div style="white-space: pre-wrap;">\n`
+      + y.description + "\n</div>\n\n";
+    markdown = header + transcript;
+  } else {
+    const r = await readability2markdown(html);
+    title = r.title;
+    markdown = r.markdown;
+  }
   const markdown_extended = markdown + "\n\n" + url;
   if (req.headers.get("Accept")?.includes("text/html")) {
     const body = await marked.parse(markdown_extended);
