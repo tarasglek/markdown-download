@@ -2,7 +2,9 @@
 
 Handy microservice/library to convert various data sources into markdown. Intended to make it easier to consume the web in ereaders
 
-https://jsr.io/@tarasglek/markdown-download
+Introductory blog post: https://taras.glek.net/post/markdown.download/
+
+Package: https://jsr.io/@tarasglek/markdown-download
 
 ### Features
 - Apply readability
