@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@tarasglek/markdown-download':
-    specifier: npm:@jsr/tarasglek__markdown-download@^1.0.102
-    version: /@jsr/tarasglek__markdown-download@1.0.102
+    specifier: npm:@jsr/tarasglek__markdown-download@^1.0.106
+    version: /@jsr/tarasglek__markdown-download@1.0.106
 
 devDependencies:
   '@cloudflare/workers-types':
@@ -538,8 +538,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@jsr/tarasglek__markdown-download@1.0.102:
-    resolution: {integrity: sha512-tR8U4zOgYn6yVP5G+9omNa0CFsRwcxm+obvZom07/aUtBkFxxL3F7sNvGbvei9TB7+LZ+UpICDh0wwIF57vx9g==, tarball: https://npm.jsr.io/~/8/@jsr/tarasglek__markdown-download/1.0.102.tgz}
+  /@jsr/tarasglek__markdown-download@1.0.106:
+    resolution: {integrity: sha512-PZJiZexAxlvFrL/JF6d6sa06RSQ8N51mfCdU4l2l1FMYhU98v13fWHSITe+kkxGSLgaCy2q5LPhNEqTDuKhVaA==, tarball: https://npm.jsr.io/~/8/@jsr/tarasglek__markdown-download/1.0.106.tgz}
     dependencies:
       '@mozilla/readability': 0.5.0
       agentmarkdown: 6.0.0

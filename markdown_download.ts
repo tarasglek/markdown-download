@@ -144,7 +144,7 @@ export default async function(req: Request): Promise<Response> {
       })) as { text: string }[];
       transcript += arr.map(({ text }) => text).join("\n\n");
     } catch (e) {
-      transcript = `Failed to fetch transcript ${e}`;
+      transcript = `Failed to fetch transcript ${e}\n`;
     }
     let header = "";
     try {
@@ -152,7 +152,7 @@ export default async function(req: Request): Promise<Response> {
       header = "# " + y.title + "\n\n" + y.embedHTML() + `\n\n<div style="white-space: pre-wrap;">\n`
         + y.description + "\n</div>\n\n";
     } catch (e) {
-      header = `Failed to fetch youtube metadata: ${e}`;
+      header = `Failed to fetch youtube metadata: ${e}\n`;
     }
     markdown = header + "\n" + transcript;
   } else {
