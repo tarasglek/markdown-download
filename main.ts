@@ -106,64 +106,64 @@ function processInput(req: Request) {
   return ret;
 }
 
-export default async function(req: Request): Promise<Response> {
-  const action = processInput(req);
-  const url = action.url;
-  if (!url) {
-    return action.response!;
-  }
-
-  const html = await fetch(url.toString(), {
-    method: req.method,
-    headers: new Headers({
-      "User-Agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
-      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
-      "Accept-Language": "en-US,en;q=0.5",
-      "Sec-Fetch-Site": "cross-site",
-      "Sec-Fetch-Mode": "navigate",
-      "Sec-Fetch-User": "?1",
-      "Sec-Fetch-Dest": "document",
-      "Referer": "https://www.google.com/",
-      "sec-ch-ua": `"Not A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"`,
-      "sec-ch-ua-mobile": "?0",
-      "sec-ch-ua-platform": `"macOS"`,
-      "Upgrade-Insecure-Requests": "1",
-      // Add any other headers you need here
-    }),
-  }).then(r => r.text());
-
-  let title = "";
-  let markdown = "";
-  const youtubeVideoID = getYoutubeVideoID(url);
-  if (youtubeVideoID) {
-    let transcript = "## Generated Transcription\n\n";
-    try {
-      const arr = (await getSubtitles({
-        videoID: youtubeVideoID,
-      })) as { text: string }[];
-      transcript += arr.map(({ text }) => text).join("\n\n");
-    } catch (e) {
-      transcript = `Failed to fetch transcript ${e}\n`;
+async function handler(req: Request): Promise<Response> {
+    const action = processInput(req);
+    const url = action.url;
+    if (!url) {
+      return action.response!;
     }
-    let header = "";
-    try {
-      const y = await YouTube.getVideo(url.toString());
-      header = "# " + y.title + "\n\n" + y.embedHTML() + `\n\n<div style="white-space: pre-wrap;">\n`
-        + y.description + "\n</div>\n\n";
-    } catch (e) {
-      header = `Failed to fetch youtube metadata: ${e}\n`;
+
+    const html = await fetch(url.toString(), {
+      method: req.method,
+      headers: new Headers({
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Sec-Fetch-Site": "cross-site",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-User": "?1",
+        "Sec-Fetch-Dest": "document",
+        "Referer": "https://www.google.com/",
+        "sec-ch-ua": `"Not A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"`,
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": `"macOS"`,
+        "Upgrade-Insecure-Requests": "1",
+        // Add any other headers you need here
+      }),
+    }).then(r => r.text());
+
+    let title = "";
+    let markdown = "";
+    const youtubeVideoID = getYoutubeVideoID(url);
+    if (youtubeVideoID) {
+      let transcript = "## Generated Transcription\n\n";
+      try {
+        const arr = (await getSubtitles({
+          videoID: youtubeVideoID,
+        })) as { text: string }[];
+        transcript += arr.map(({ text }) => text).join("\n\n");
+      } catch (e) {
+        transcript = `Failed to fetch transcript ${e}\n`;
+      }
+      let header = "";
+      try {
+        const y = await YouTube.getVideo(url.toString());
+        header = "# " + y.title + "\n\n" + y.embedHTML() + `\n\n<div style="white-space: pre-wrap;">\n`
+          + y.description + "\n</div>\n\n";
+      } catch (e) {
+        header = `Failed to fetch youtube metadata: ${e}\n`;
+      }
+      markdown = header + "\n" + transcript;
+    } else {
+      const r = await readability2markdown(html);
+      title = r.title;
+      markdown = r.markdown;
     }
-    markdown = header + "\n" + transcript;
-  } else {
-    const r = await readability2markdown(html);
-    title = r.title;
-    markdown = r.markdown;
-  }
-  const markdown_extended = markdown + "\n\n" + url;
-  if (req.headers.get("Accept")?.includes("text/html")) {
-    const body = await marked.parse(markdown_extended);
-    const html = `
+    const markdown_extended = markdown + "\n\n" + url;
+    if (req.headers.get("Accept")?.includes("text/html")) {
+      const body = await marked.parse(markdown_extended);
+      const html = `
 <html lang="en" class="js-focus-visible" data-js-focus-visible=""><head>
   <meta charset="utf-8">
   <title>${title}</title>
@@ -171,11 +171,11 @@ export default async function(req: Request): Promise<Response> {
   ${body}
   </html>
     `;
-    return response(html, "text/html");
-  } else {
-    return response(markdown_extended);
+      return response(html, "text/html");
+    } else {
+      return response(markdown_extended);
+    }
   }
-}
 
 /**
  * Simple UI that takes a url
@@ -209,3 +209,7 @@ export function generate_ui(input_description: string, link: string, link_text: 
 `;
   return html;
 }
+
+export default {
+  fetch: handler
+};

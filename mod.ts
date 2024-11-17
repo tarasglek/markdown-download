@@ -1,5 +1,5 @@
 // Import the default export from the module
-import handler, {readability2markdown, html2markdown, generate_ui} from "./markdown_download.ts";
+import handler, {readability2markdown, html2markdown, generate_ui} from "./main.ts";
 
 /**
  * Markdown magic serving happens here
